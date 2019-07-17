@@ -10,7 +10,7 @@ import java.lang.instrument.Instrumentation;
 /**
  * Created by 64669 on 2019/7/12.
  */
-public class IAgentMain {
+public class RedefineAgentMain {
 
     public static void agentmain(String agentArgs, Instrumentation inst)
             throws Exception {
