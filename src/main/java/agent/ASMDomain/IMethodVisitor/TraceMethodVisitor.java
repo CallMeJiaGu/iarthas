@@ -1,4 +1,4 @@
-package agent.ASMDomain;
+package agent.ASMDomain.IMethodVisitor;
 
 
 
@@ -20,7 +20,7 @@ public class TraceMethodVisitor extends MethodVisitor {
     public int preCode = -1 ;
     public int lastCode = -1 ;
 
-    protected TraceMethodVisitor(MethodVisitor mv, String n) {
+    public TraceMethodVisitor(MethodVisitor mv, String n) {
         super(Opcodes.ASM5, mv);
         name = n;
     }

@@ -18,7 +18,4 @@ public class Main {
             Thread.sleep(1000);
         }
     }
-
-
-
 }
