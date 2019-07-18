@@ -1,5 +1,5 @@
 # iarthas
-仿写阿里开源工具arthas， 实现了trace、redefine、watch等功能。整体技术栈：Java agent + Java attach API + asm + ASM +ASM byteCode Viewer。（Imitate the Alibaba open source tool arthas, and implement trace, redefine, watch and other functions. The overall technology stack:Java agent + Java attach API + asm + ASM +ASM byteCode Viewer）
+仿写阿里开源工具arthas， 实现了trace、redefine、watch等功能。整体技术栈：Java agent + Java attach API + asm  +ASM byteCode Viewer。（Imitate the Alibaba open source tool arthas, and implement trace, redefine, watch and other functions. The overall technology stack:Java agent + Java attach API + asm +ASM byteCode Viewer）
 
 
 
