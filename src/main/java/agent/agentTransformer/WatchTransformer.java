@@ -5,6 +5,7 @@ import agent.ASMDomain.IClassVisitor.WatchClassVisitor;
 import org.springframework.asm.ClassReader;
 import org.springframework.asm.ClassWriter;
 
+import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
@@ -31,6 +32,16 @@ public class WatchTransformer implements ClassFileTransformer {
 
             WatchClassVisitor watchClassVisitor = new WatchClassVisitor(writer,methodName_i);
             reader.accept(watchClassVisitor, ClassReader.SKIP_FRAMES);
+
+            // 打印转换字节码结果
+            try {
+                FileOutputStream fos = new FileOutputStream("F:/New.class");
+                fos.write(writer.toByteArray());
+                fos.close();
+            }catch (Exception e){
+                System.out.println(e);
+            }
+
 
             return writer.toByteArray();
         }

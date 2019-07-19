@@ -1,9 +1,12 @@
 package agent.ASMDomain.IClassVisitor;
 
-import agent.ASMDomain.IMethodVisitor.TraceMethodVisitor;
+import agent.ASMDomain.ASMUtils.ASMTypeUtil;
+import agent.ASMDomain.ASMUtils.IType;
 import agent.ASMDomain.IMethodVisitor.WatchMethodVisitor;
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.MethodVisitor;
+
+import java.util.ArrayList;
 
 import static org.springframework.asm.Opcodes.ASM5;
 
@@ -29,7 +32,8 @@ public class WatchClassVisitor  extends ClassVisitor {
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if (name.equals(methodName)) {
-            return new WatchMethodVisitor(mv,name);
+            ArrayList<IType> parInputITypes = ASMTypeUtil.getParameterTypesByDesc(desc);
+            return new WatchMethodVisitor(mv,name, parInputITypes);
         }
         return mv;
     }
