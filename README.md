@@ -2,9 +2,9 @@
 仿写阿里开源工具arthas， 实现了trace、redefine、watch等功能。整体技术栈：Java agent + Java attach API + asm  +ASM byteCode Viewer。（Imitate the Alibaba open source tool arthas, and implement trace, redefine, watch and other functions. The overall technology stack:Java agent + Java attach API + asm +ASM byteCode Viewer）
 
 
-[阿尔萨斯 原理探究 仿写arthas-trace](https://www.callmejiagu.com/2019/07/15/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-trace/)
-
 [阿尔萨斯 原理探究 仿写arthas-watch](https://www.callmejiagu.com/2019/07/19/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-watch/)
+
+[阿尔萨斯 原理探究 仿写arthas-trace](https://www.callmejiagu.com/2019/07/15/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-trace/)
 
 [阿尔萨斯 原理探究 仿写arthas-redefine](https://www.callmejiagu.com/2019/07/14/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-redefine/)
 
