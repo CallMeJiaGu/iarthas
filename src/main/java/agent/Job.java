@@ -5,13 +5,22 @@ package agent;
  */
 public class Job {
     public int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
-
-        int xx = x+1;
+//        System.out.println(x);
+//        System.out.println(s);
+//        System.out.println(l);
+//        System.out.println(j);
+//        System.out.println(n);
+//        System.out.println(d);
+        int aa = 1;
+        int bb = 2;
+        int xx = x+3;
+        int x1 = 1;
         Thread.sleep(1000);
         test();
         doDelet(0,1);
         String a = "abc";
         test1(a);
+        int x11 = 1;
         return  xx;
 
     }

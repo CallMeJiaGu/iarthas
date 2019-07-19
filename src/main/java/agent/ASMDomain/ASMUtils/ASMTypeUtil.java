@@ -37,7 +37,7 @@ public class ASMTypeUtil {
      * @param desc 方法的描述
      * @return 返回入参的类型的集合
      */
-    public static ArrayList<IType> getParameterTypesByDesc(String desc){
+    public static ArrayList<IType> getInputParameterTypesByDesc(String desc){
         ArrayList<IType> parameterITypes = new ArrayList<>(10);
 
         org.springframework.asm.Type[] types = org.springframework.asm.Type.getArgumentTypes(desc);
@@ -55,5 +55,19 @@ public class ASMTypeUtil {
             parameterITypes.add(new IType(opcode,typeDescriptor, classType, typeByteSize,printDesc));
         }
         return parameterITypes;
+    }
+
+    public static IType getOutputParameterTypesByDesc(String desc){
+        org.springframework.asm.Type type = org.springframework.asm.Type.getReturnType(desc);
+        String typeDescriptor = type.getDescriptor();
+        // 根据typeDescriptor或的对应的类型 int double
+        String classType = getTypeByDesc(typeDescriptor);
+        // 根据classType获得对应数据类型加载的opcode
+        int opcode =  ASMLoadInsn.getOpcodes(classType);
+        // 根据classType 获得数据类型占用的变量栈的大小
+        int typeByteSize = ASMLoadInsn.getClassByteSize(classType);
+        // 根据classType 和 typeDescriptor 决定输出的 desc
+        String printDesc = getTypePrintDesc(classType,typeDescriptor);
+        return new IType(opcode,typeDescriptor,classType,typeByteSize,printDesc);
     }
 }

@@ -3,9 +3,7 @@ package agent.ASMDomain.IMethodVisitor;
 import agent.ASMDomain.ASMUtils.IType;
 import org.springframework.asm.MethodVisitor;
 import org.springframework.asm.Opcodes;
-
 import java.util.ArrayList;
-
 import static org.springframework.asm.Opcodes.GETSTATIC;
 import static org.springframework.asm.Opcodes.INVOKEVIRTUAL;
 
@@ -16,11 +14,13 @@ public class WatchMethodVisitor extends MethodVisitor{
 
     public String name ;
     public ArrayList<IType> parInputITypes; //存放入参的类型Type
-
-    public WatchMethodVisitor(MethodVisitor mv, String n,ArrayList<IType> ITypes) {
+    public int lastVar ; // 存放最后一个变量出栈的位置，即为返回值的下标！！
+    public IType parOutITypes; //存放输出类型
+    public WatchMethodVisitor(MethodVisitor mv, String n,ArrayList<IType> ITypes,IType outITypes) {
         super(Opcodes.ASM5, mv);
         name = n;
         parInputITypes = ITypes;
+        parOutITypes = outITypes;
     }
 
     @Override
@@ -52,6 +52,33 @@ public class WatchMethodVisitor extends MethodVisitor{
             }
         }
         super.visitCode();
+    }
+
+
+    @Override
+    public void visitInsn(int opcode) {
+        if (opcode <= Opcodes.RETURN && opcode >= Opcodes.IRETURN) {
+            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+            mv.visitLdcInsn(" 出参：");
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+
+            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+            mv.visitLdcInsn("       参数类型-- "+parOutITypes.getClassType()+"@");
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
+
+            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+            mv.visitVarInsn(parOutITypes.getLoadOpcode(), lastVar);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(" + parOutITypes.getPrintDesc() + ")V", false);
+
+        }
+        super.visitInsn(opcode);
+    }
+
+
+    @Override
+    public void visitVarInsn(int opcode, int var) {
+        lastVar = var;
+        super.visitVarInsn(opcode,var);
     }
 
 

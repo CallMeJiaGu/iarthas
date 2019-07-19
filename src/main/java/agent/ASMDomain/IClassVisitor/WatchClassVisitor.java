@@ -32,8 +32,9 @@ public class WatchClassVisitor  extends ClassVisitor {
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if (name.equals(methodName)) {
-            ArrayList<IType> parInputITypes = ASMTypeUtil.getParameterTypesByDesc(desc);
-            return new WatchMethodVisitor(mv,name, parInputITypes);
+            ArrayList<IType> parInputITypes = ASMTypeUtil.getInputParameterTypesByDesc(desc);
+            IType parOutputTypes = ASMTypeUtil.getOutputParameterTypesByDesc(desc);
+            return new WatchMethodVisitor(mv,name, parInputITypes,parOutputTypes);
         }
         return mv;
     }
