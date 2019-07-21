@@ -34,14 +34,13 @@ public class WatchTransformer implements ClassFileTransformer {
             reader.accept(watchClassVisitor, ClassReader.SKIP_FRAMES);
 
             // 打印转换字节码结果
-            try {
-                FileOutputStream fos = new FileOutputStream("F:/New.class");
-                fos.write(writer.toByteArray());
-                fos.close();
-            }catch (Exception e){
-                System.out.println(e);
-            }
-
+//            try {
+//                FileOutputStream fos = new FileOutputStream("F:/New.class");
+//                fos.write(writer.toByteArray());
+//                fos.close();
+//            }catch (Exception e){
+//                System.out.println(e);
+//            }
 
             return writer.toByteArray();
         }

@@ -5,12 +5,6 @@ package agent;
  */
 public class Job {
     public int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
-//        System.out.println(x);
-//        System.out.println(s);
-//        System.out.println(l);
-//        System.out.println(j);
-//        System.out.println(n);
-//        System.out.println(d);
         int aa = 1;
         int bb = 2;
         int xx = x+3;
@@ -38,5 +32,9 @@ public class Job {
 
     public String test1(String str){
         return str;
+    }
+
+    public void add(int x,int y){
+        int result = x+y;
     }
 }
