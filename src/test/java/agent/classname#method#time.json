@@ -1,0 +1,14 @@
+{
+  "classname":"agent.job",
+  "method":"add",
+  "TypeParameters":{},
+  "paramInput":{
+    "type":"",
+    "value":""
+  },
+
+  "paramOutPut":{
+    "type":"",
+    "value":""
+  }
+}

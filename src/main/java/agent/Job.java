@@ -4,7 +4,10 @@ package agent;
  * Created by 64669 on 2019/7/14.
  */
 public class Job {
-    public int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
+
+    volatile int A =1;
+
+    public synchronized int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
         int aa = 1;
         int bb = 2;
         int xx = x+3;
@@ -36,5 +39,6 @@ public class Job {
 
     public void add(int x,int y){
         int result = x+y;
+        System.out.println(result);
     }
 }
