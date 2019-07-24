@@ -5,9 +5,12 @@ package agent;
  */
 public class Job {
 
-    volatile int A =1;
+    int y = 2;
+    public int x =1;
+    public String str = "job";
 
-    public synchronized int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
+
+    public int doAdd(int x,String s,long l ,Job j,Main n,double d) throws Exception{
         int aa = 1;
         int bb = 2;
         int xx = x+3;
@@ -19,7 +22,6 @@ public class Job {
         test1(a);
         int x11 = 1;
         return  xx;
-
     }
 
     public int doDelet(int x, int y) throws Exception{

@@ -1,5 +1,8 @@
 package agent;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.*;
 import java.lang.reflect.Method;
 
@@ -14,35 +17,18 @@ import static java.lang.Class.forName;
  * 还要对类的参数 和 data分开存储
  */
 
-public class TimeTunnelTest {
+public class TimeTunnelTest implements Serializable{
 
-    public int add(int x,int y){
-        //System.out.println(x+y);
-        return x+y;
+    public int x =5;
+    public int add(TimeTunnelTest x,int y){
+        return x.x+y;
     }
-
-//    public void add(int x,TimeTunnelTest t){
-//        System.out.println("x");
-//    }
 
 
     public static void main(String[] args) throws Exception{
         //testWrite();
-        testRead();
-        /**
-        output.writeUTF(target.getName());
-        output.writeUTF(method.getName());
-        output.writeObject(method.getParameterTypes());
-         **/
-
-
-        /**
-        String className = objectInputStream.readUTF();
-        String methodName = objectInputStream.readUTF();
-        Class<?>[] parameterTypes = (Class<?>[]) objectInputStream.readObject();
-        Object[] arguments = (Object[]) objectInputStream.readObject();
-         **/
-
+        test();
+        //testRead();
     }
 
     public static void testWrite() {
@@ -59,6 +45,14 @@ public class TimeTunnelTest {
                     Class<?>[] paramTypes = m.getParameterTypes();
                     System.out.println("写入参数");
                     out.writeObject(paramTypes);
+
+                    // 是不是可以提供一个类，专门来集成，这个类已经实现了serizable的 ,
+                    // 这样好像不能是实现，因为不能确保每个子类都继承了serizable的
+                    //TimeTunnelTest timeTunnelTest = new TimeTunnelTest();
+                    Object[] args = new Object[2];
+                    args[0] = 1;
+                    args[1] = 2;
+                    out.writeObject(args);
                     break;
                 }
 
@@ -83,12 +77,10 @@ public class TimeTunnelTest {
             String classname = input.readUTF();
             String methodName = input.readUTF();
             Class<?>[] paramTypes = (Class<?>[])input.readObject();
+            Object[] args = (Object[]) input.readObject();
 
             Class<?> targetClass = Class.forName(classname);
             Method method = targetClass.getMethod(methodName,paramTypes);
-            Object[] args = new Object[2];
-            args[0] = 1;
-            args[1] = 2;
             Object result = method.invoke(targetClass.newInstance(),args);
             System.out.println((int)result);
 
@@ -102,6 +94,23 @@ public class TimeTunnelTest {
                 System.out.println(e);
             }
         }
+
+        ThreadLocal threadLocal = new ThreadLocal();
+        threadLocal.set("abc");
+
+        threadLocal.get();
+
+
+        ThreadLocal threadLoca2 = new ThreadLocal();
+        threadLoca2.set("123");
+
+    }
+
+    public static void test(){
+        String jsonS = "{\"j\":{\"str\":\"job\",\"x\":1},\"x\":1,\"y\":\"abc\"}";
+        JSONObject object = JSON.parseObject(jsonS);
+
+        System.out.println(object.get("j"));
     }
 
 }
