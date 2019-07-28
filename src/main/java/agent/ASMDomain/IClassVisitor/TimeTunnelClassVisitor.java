@@ -4,6 +4,7 @@ import agent.ASMDomain.ASMUtils.ASMTypeUtil;
 import agent.ASMDomain.ASMUtils.IType;
 import agent.ASMDomain.IMethodVisitor.TimeTunnelMethodVisitor;
 import agent.ASMDomain.IMethodVisitor.WatchMethodVisitor;
+import agent.Utils.Advice;
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.MethodVisitor;
 
@@ -17,10 +18,12 @@ import static org.springframework.asm.Opcodes.ASM5;
 public class TimeTunnelClassVisitor extends ClassVisitor {
 
     public String methodName ;
+    public Advice advice;
 
-    public TimeTunnelClassVisitor(final ClassVisitor cv, String mn) {
+    public TimeTunnelClassVisitor(final ClassVisitor cv, String mn,Advice ad) {
         super(ASM5, cv);
         methodName = mn;
+        advice = ad;
     }
 
     @Override
@@ -28,8 +31,8 @@ public class TimeTunnelClassVisitor extends ClassVisitor {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if (name.equals(methodName)) {
             ArrayList<IType> parInputITypes = ASMTypeUtil.getInputParameterTypesByDesc(desc);
-            IType parOutputTypes = ASMTypeUtil.getOutputParameterTypesByDesc(desc);
-            return new TimeTunnelMethodVisitor(mv,name, parInputITypes,parOutputTypes);
+            //IType parOutputTypes = ASMTypeUtil.getOutputParameterTypesByDesc(desc);
+            return new TimeTunnelMethodVisitor(mv,name, parInputITypes,advice);
         }
         return mv;
     }

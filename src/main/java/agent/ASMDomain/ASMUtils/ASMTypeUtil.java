@@ -9,14 +9,36 @@ import java.util.HashMap;
  */
 public class ASMTypeUtil {
     //TODO 数组类型没有判断
+    static String[] basicClassTypes = {"boolean", "char", "byte", "short", "int", "float", "long", "double"};
     static String[] classTypes = {"boolean", "char", "byte", "short", "int", "float", "long", "double","Object" ,"String"};
     static String[] typeDesc = {"Z", "C", "B", "S", "I", "F", "J", "D", "Ljava/lang/Object;", "Ljava/lang/String;" };
+
+    static String[] ZXTypes = {"Ljava/lang/Boolean", "Ljava/lang/Character", "Ljava/lang/Byte", "Ljava/lang/Short",
+                                 "Ljava/lang/Integer", "Ljava/lang/Float", "Ljava/lang/Long", "Ljava/lang/Double" };
     public static HashMap<String, String> typeMap = new HashMap<>(16);
+    public static HashMap<String, String> ZXTypeMap = new HashMap<>(16);
+
 
     static {
         for(int i=0; i<classTypes.length ;i++){
             typeMap.put(typeDesc[i],classTypes[i]);
         }
+
+        for(int i=0; i<8; i++){
+            ZXTypeMap.put(basicClassTypes[i], ZXTypes[i]);
+        }
+    }
+
+
+    /**
+     * 判断一个数据是否为基本数据类型
+     * @param type
+     * @return
+     */
+    public static Boolean isBasicType(String type){
+        if(Arrays.asList(basicClassTypes).contains(type))
+            return true;
+        return false;
     }
 
     public static String getTypeByDesc(String desc){
@@ -30,6 +52,17 @@ public class ASMTypeUtil {
             return typeDescriptor;
         }
         return "Ljava/lang/Object;";
+    }
+
+    /**
+     * 获得装箱类型
+     * @param classType
+     * @return
+     */
+    public static String getZxType(String classType){
+        if(ZXTypeMap.containsKey(classType))
+            return ZXTypeMap.get(classType);
+        return "Ljava/lang/Object";
     }
 
     /**

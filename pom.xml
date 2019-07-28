@@ -152,7 +152,7 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Premain-Class>agent.agentDomain.IPreMain</Premain-Class>
-                    <Agent-Class>agent.agentDomain.WatchAgentMain</Agent-Class>
+                    <Agent-Class>agent.agentDomain.TimeTunnelAgentMain</Agent-Class>
                     <Can-Retransform-Classes>true</Can-Retransform-Classes>
                     <Can-Redefine-Classes>true</Can-Redefine-Classes>
                   </manifestEntries>

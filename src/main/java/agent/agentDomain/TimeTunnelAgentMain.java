@@ -17,11 +17,6 @@ public class TimeTunnelAgentMain {
         String methodName = agentArgs.substring(agentArgs.lastIndexOf(".")+1,agentArgs.length());
         String className = agentArgs.substring(0,agentArgs.lastIndexOf("."));
 
-        /** 记录类名、方法名、参数 -- 这里在attach来的时候，是没有传递参数的，因此我这里做的是对所有同名的方法进行操作
-         *  即没有考虑重载方法的验证
-         */
-        TimeTunnelCollect.Collect(className,methodName);
-
         inst.addTransformer(new TimeTunnelTransformer(className, methodName), true);
         inst.retransformClasses(getClassByRedefinePath(className));
     }

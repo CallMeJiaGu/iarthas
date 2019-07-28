@@ -1,10 +1,12 @@
 package agent.agentTransformer;
 
+import agent.Utils.Advice;
 import agent.ASMDomain.IClassVisitor.TimeTunnelClassVisitor;
-import agent.ASMDomain.IClassVisitor.WatchClassVisitor;
+import agent.Utils.AdviceUtil;
 import org.springframework.asm.ClassReader;
 import org.springframework.asm.ClassWriter;
 
+import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
@@ -29,10 +31,20 @@ public class TimeTunnelTransformer  implements ClassFileTransformer {
         if (className.equals(className_i)) {
             ClassReader reader = new ClassReader(classfileBuffer);
             ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
+            try {
+                //把要监控方法的类、方法名、方法参数类型保留在advice
+                Advice advice = AdviceUtil.timeTunnelInitAdvice(className_i,methodName_i);
+                TimeTunnelClassVisitor timeTunnelClassVisitor = new TimeTunnelClassVisitor(writer, methodName_i,advice);
+                reader.accept(timeTunnelClassVisitor, ClassReader.SKIP_FRAMES);
 
-            TimeTunnelClassVisitor timeTunnelClassVisitor = new TimeTunnelClassVisitor(writer, methodName_i);
-            reader.accept(timeTunnelClassVisitor, ClassReader.SKIP_FRAMES);
-            return writer.toByteArray();
+                FileOutputStream fos = new FileOutputStream("F:/New.class");
+                fos.write(writer.toByteArray());
+                fos.close();
+
+                return writer.toByteArray();
+            }catch (Exception e){
+                System.out.println(e);
+            }
         }
         return classfileBuffer;
     }
