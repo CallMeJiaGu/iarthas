@@ -28,13 +28,15 @@ public class TimeTunnelClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
-        MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+        //MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+
         if (name.equals(methodName)) {
             ArrayList<IType> parInputITypes = ASMTypeUtil.getInputParameterTypesByDesc(desc);
             //IType parOutputTypes = ASMTypeUtil.getOutputParameterTypesByDesc(desc);
+            MethodVisitor mv = super.visitMethod(access, name, desc, signature, new String[]{"java/lang/Exception"});
             return new TimeTunnelMethodVisitor(mv,name, parInputITypes,advice);
         }
-        return mv;
+        return super.visitMethod(access, name, desc, signature, exceptions);
     }
 
 }

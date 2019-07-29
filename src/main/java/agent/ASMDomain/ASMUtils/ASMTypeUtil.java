@@ -13,8 +13,8 @@ public class ASMTypeUtil {
     static String[] classTypes = {"boolean", "char", "byte", "short", "int", "float", "long", "double","Object" ,"String"};
     static String[] typeDesc = {"Z", "C", "B", "S", "I", "F", "J", "D", "Ljava/lang/Object;", "Ljava/lang/String;" };
 
-    static String[] ZXTypes = {"Ljava/lang/Boolean", "Ljava/lang/Character", "Ljava/lang/Byte", "Ljava/lang/Short",
-                                 "Ljava/lang/Integer", "Ljava/lang/Float", "Ljava/lang/Long", "Ljava/lang/Double" };
+    static String[] ZXTypes = {"java/lang/Boolean", "java/lang/Character", "java/lang/Byte", "java/lang/Short",
+                                 "java/lang/Integer", "java/lang/Float", "java/lang/Long", "java/lang/Double" };
     public static HashMap<String, String> typeMap = new HashMap<>(16);
     public static HashMap<String, String> ZXTypeMap = new HashMap<>(16);
 
