@@ -19,6 +19,8 @@ public class TimeTunnelClassVisitor extends ClassVisitor {
 
     public String methodName ;
     public Advice advice;
+    public String path ;
+
 
     public TimeTunnelClassVisitor(final ClassVisitor cv, String mn,Advice ad) {
         super(ASM5, cv);

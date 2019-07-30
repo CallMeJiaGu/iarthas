@@ -13,6 +13,12 @@ public class Main {
 
     public static void main( String[] args ) throws Exception {
 
+
+//        String clazz = Thread.currentThread() .getStackTrace()[1].getClassName();
+//        // 获得当前方法名
+//        String method = Thread.currentThread() .getStackTrace()[1].getMethod();
+//        System.out.println(clazz+method);
+
         Job demo = new Job();
         Main m = new Main();
         while (true) {
@@ -20,7 +26,9 @@ public class Main {
             System.out.println(demo.doAdd(1,"abc",11L,demo,m,0.11d));
             System.out.println(demo.doDelet(2,1));
             System.out.println("-------------------");
-            Thread.sleep(1000);
+            Thread.sleep(8000);
         }
+
+
     }
 }

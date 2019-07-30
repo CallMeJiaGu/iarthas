@@ -34,14 +34,20 @@ public class TimeTunnelTest {
 //            func("abc", 1, 0.1d, t);
 //            Thread.sleep(1000);
 //        }
-        String s = JSONObject.toJSONString(1);
+        //String s = JSONObject.toJSONString(1);
         //System.out.println(s);
 
-        Object o = JSONObject.parseObject("1",Integer.class);
+        //Object o = JSONObject.parseObject("1",Integer.class);
         //testWrite();
         testRead();
         //TimeTunnelTest timeTunnelTest = new TimeTunnelTest();
         //func(1,"123",0.1d,timeTunnelTest);
+    }
+
+
+    public int doAdd(int x,String s,long l ,Job j,Main n,double d) {
+
+        return  n.x + 7;
     }
 
     public static int func(int x , String str , double d ,TimeTunnelTest t){
@@ -68,13 +74,13 @@ public class TimeTunnelTest {
     public static void testWrite() {
         ObjectOutputStream out = null;
         try {
-            out = new ObjectOutputStream(new FileOutputStream(new File("./classAdvice")));
+            out = new ObjectOutputStream(new FileOutputStream(new File("./doAddAdvice"),true));
             // 保留类
             Class<?> tc = TimeTunnelTest.class;
 
             Method[] methods = tc.getMethods();
             for (Method mTemp : methods) {
-                if (mTemp.getName().equals("func")) {
+                if (mTemp.getName().equals("doAdd")) {
 
                     // 保留方法
                     String mn = mTemp.getName();
@@ -83,18 +89,18 @@ public class TimeTunnelTest {
                     Class<?>[] pt = mTemp.getParameterTypes();
 
                     // 保留参数
-                    String str = "abc";
-                    int x = 10;
-                    double d = 0.11d;
-                    TimeTunnelTest timeTunnelTest = new TimeTunnelTest();
-                    timeTunnelTest.x = 1;
-                    String[] args = new String[4];
-                    args[0] = JSON.toJSONString(x);
-                    args[1] = JSON.toJSONString(str);
-                    args[2] = JSON.toJSONString(d);
-                    args[3] = JSON.toJSONString(timeTunnelTest);
+//                    String str = "abc";
+//                    int x = 10;
+//                    double d = 0.11d;
+//                    TimeTunnelTest timeTunnelTest = new TimeTunnelTest();
+//                    timeTunnelTest.x = 1;
+//                    String[] args = new String[4];
+//                    args[0] = JSON.toJSONString(x);
+//                    args[1] = JSON.toJSONString(str);
+//                    args[2] = JSON.toJSONString(d);
+//                    args[3] = JSON.toJSONString(timeTunnelTest);
 
-                    Advice advice = new Advice(tc,mn,pt,args);
+                    Advice advice = new Advice(tc,mn,pt,new String[]{});
                     out.writeObject(advice);
                     break;
                 }
@@ -115,13 +121,22 @@ public class TimeTunnelTest {
 
     public static void testRead(){
         ObjectInputStream input = null;
+        ObjectInputStream input1 = null;
+
+        String path = "./agent.Job@doAdd#1564459759089";
+        String metaPath = path.substring(0,path.indexOf("#"));
+
         try{
-            input = new ObjectInputStream(new FileInputStream(new File("./classAdvice")));
+            input = new ObjectInputStream(new FileInputStream(new File(metaPath)));
+            input1 = new ObjectInputStream(new FileInputStream(new File(path)));
             Advice advice = (Advice) input.readObject();
 
             Class<?> targetClass = advice.targetClass;
             Method method = targetClass.getMethod(advice.methodname,advice.paramTypes);
-            Object[] args = getParams(advice.args);
+
+
+            String[] strArgs = (String[]) input1.readObject();
+            Object[] args = getParams(strArgs);
             Object result = method.invoke(targetClass.newInstance(),args);
             System.out.println((int)result);
 
@@ -142,11 +157,14 @@ public class TimeTunnelTest {
         Object[] result = new Object[strAgrs.length];
 //        for(int i=0; i<strAgrs.length ;i++){
 //            result[i] = JSON.parseObject(strAgrs[i]);
+       // t x,String s,long l ,Job j,Main n,double d
 //        }
         result[0] = JSON.parseObject(strAgrs[0],Integer.class);
         result[1] = JSON.parseObject(strAgrs[1], String.class);
-        result[2] = JSON.parseObject(strAgrs[2], Double.class);
-        result[3] = JSON.parseObject(strAgrs[3], TimeTunnelTest.class);
+        result[2] = JSON.parseObject(strAgrs[2], Long.class);
+        result[3] = JSON.parseObject(strAgrs[3], Job.class);
+        result[4] = JSON.parseObject(strAgrs[4], Main.class);
+        result[5] = JSON.parseObject(strAgrs[5], Double.class);
 
         return result;
     }

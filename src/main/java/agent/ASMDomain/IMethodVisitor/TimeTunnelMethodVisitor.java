@@ -2,6 +2,7 @@ package agent.ASMDomain.IMethodVisitor;
 
 import agent.ASMDomain.ASMUtils.ASMTypeUtil;
 import agent.ASMDomain.ASMUtils.IType;
+import agent.CollectIO.TimeTunnelCollect;
 import agent.Utils.Advice;
 import org.springframework.asm.Label;
 import org.springframework.asm.MethodVisitor;
@@ -20,8 +21,8 @@ public class TimeTunnelMethodVisitor extends MethodVisitor {
     public ArrayList<IType> parInputITypes; //存放入参的类型Type
     public int lastVar ; // 存放最后一个变量出栈的位置，即为返回值的下标！！
     public IType parOutITypes; //存放输出类型
+    public String path;
     public Advice advice;
-
     public TimeTunnelMethodVisitor(MethodVisitor mv, String n,ArrayList<IType> ITypes,Advice ad) {
         super(Opcodes.ASM5, mv);
         name = n;
@@ -31,26 +32,68 @@ public class TimeTunnelMethodVisitor extends MethodVisitor {
 
     @Override
     public void visitCode() {
+        try {
+            dumpAdvice( "./" + advice.getTargetClass().getName() + "@" + advice.getMethodname());
+        }catch (Exception e){}
 
-//        int outFileIndex = getObjectArrayIndex();
-//        // 生成try catch
-//        Label label0 = new Label();
-//        Label label1 = new Label();
-//        Label label2 = new Label();
-//        mv.visitTryCatchBlock(label0, label1, label2, "java/lang/Exception");
+        int nextIndex = getNextIndex();
+
+        // String clazz = Thread.currentThread() .getStackTrace()[1].getClassName();
+        int clazzNameIndex = nextIndex++;
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getStackTrace", "()[Ljava/lang/StackTraceElement;", false);
+        mv.visitInsn(ICONST_1);
+        mv.visitInsn(AALOAD);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StackTraceElement", "getClassName", "()Ljava/lang/String;", false);
+        mv.visitVarInsn(ASTORE, clazzNameIndex);
+
+        // String method = Thread.currentThread() .getStackTrace()[1].getMethodName();
+        int methodNameIndex = nextIndex++;
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getStackTrace", "()[Ljava/lang/StackTraceElement;", false);
+        mv.visitInsn(ICONST_1);
+        mv.visitInsn(AALOAD);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StackTraceElement", "getMethodName", "()Ljava/lang/String;", false);
+        mv.visitVarInsn(ASTORE, methodNameIndex);
+
+
+        // String path = clazz+"@"+method+"#"+System.currentTimeMillis();
+        int pathIndex = nextIndex++;
+        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+        mv.visitInsn(DUP);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+        mv.visitVarInsn(ALOAD, clazzNameIndex);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+
+        mv.visitLdcInsn("@");
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+
+        mv.visitVarInsn(ALOAD, methodNameIndex);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+
+        mv.visitLdcInsn("#");
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+        mv.visitVarInsn(ASTORE, pathIndex);
+
 //
-//        // 生成IO对象
-//        mv.visitTypeInsn(NEW, "java/io/ObjectOutputStream");
-//        mv.visitInsn(DUP);
-//        mv.visitTypeInsn(NEW, "java/io/FileOutputStream");
-//        mv.visitInsn(DUP);
-//        mv.visitTypeInsn(NEW, "java/io/File");
-//        mv.visitInsn(DUP);
-//        mv.visitLdcInsn("./classAdvice");
-//        mv.visitMethodInsn(INVOKESPECIAL, "java/io/File", "<init>", "(Ljava/lang/String;)V", false);
-//        mv.visitMethodInsn(INVOKESPECIAL, "java/io/FileOutputStream", "<init>", "(Ljava/io/File;)V", false);
-//        mv.visitMethodInsn(INVOKESPECIAL, "java/io/ObjectOutputStream", "<init>", "(Ljava/io/OutputStream;)V", false);
-//        mv.visitVarInsn(ASTORE, outFileIndex);
+//       // ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(path),true));
+        int outFileIndex = nextIndex++;
+        mv.visitTypeInsn(NEW, "java/io/ObjectOutputStream");
+        mv.visitInsn(DUP);
+        mv.visitTypeInsn(NEW, "java/io/FileOutputStream");
+        mv.visitInsn(DUP);
+        mv.visitTypeInsn(NEW, "java/io/File");
+        mv.visitInsn(DUP);
+        mv.visitVarInsn(ALOAD, pathIndex);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/io/File", "<init>", "(Ljava/lang/String;)V", false);
+        mv.visitInsn(ICONST_1);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/io/FileOutputStream", "<init>", "(Ljava/io/File;Z)V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/io/ObjectOutputStream", "<init>", "(Ljava/io/OutputStream;)V", false);
+        mv.visitVarInsn(ASTORE, outFileIndex);
 
 
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
@@ -58,7 +101,7 @@ public class TimeTunnelMethodVisitor extends MethodVisitor {
         mv.visitMethodInsn(org.objectweb.asm.Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
 
         // 计算申请来的数组存放的位置
-        int objectArrayIndex = getObjectArrayIndex()+1;
+        int objectArrayIndex = nextIndex++;
         if(parInputITypes !=null && parInputITypes.size()>0) {
 
 
@@ -95,14 +138,17 @@ public class TimeTunnelMethodVisitor extends MethodVisitor {
         }
 
 
-//        mv.visitVarInsn(ALOAD, outFileIndex);
-//        mv.visitVarInsn(ALOAD, objectArrayIndex);
-//        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/ObjectOutputStream", "writeObject", "(Ljava/lang/Object;)V", false);
+        mv.visitVarInsn(ALOAD, outFileIndex);
+        mv.visitVarInsn(ALOAD, objectArrayIndex);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/ObjectOutputStream", "writeObject", "(Ljava/lang/Object;)V", false);
 
         super.visitCode();
     }
 
 
+    public void dumpAdvice(String path) throws Exception{
+        TimeTunnelCollect.collect(advice,path);
+    }
 
 
     @Override
@@ -112,7 +158,7 @@ public class TimeTunnelMethodVisitor extends MethodVisitor {
     }
 
 
-    public int getObjectArrayIndex(){
+    public int getNextIndex(){
         int x = 0;
         for(int i=0; i<parInputITypes.size(); i++) {
             x +=parInputITypes.get(i).classTypeByteSize;
