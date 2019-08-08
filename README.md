@@ -98,3 +98,49 @@ fix good Bye!!
 
 
 
+
+客户端代码：
+
+```java
+/**
+ * Created by 64669 on 2019/7/11.
+ */
+public class Iarthas implements Serializable{
+
+    public static void main(String[] args) throws Exception{
+        timeTunnel("agent.Job.doAdd","57436");
+    }
+
+
+    public static void timeTunnel(String methodPath ,String pid)
+            throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+        VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+        virtualMachine.loadAgent("F:\\iarthas\\target\\agentTest-1.0-SNAPSHOT.jar", methodPath);
+        virtualMachine.detach();
+    }
+
+    public static void watch(String methodPath ,String pid)
+            throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+        VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+        virtualMachine.loadAgent("C:\\Users\\64669\\Desktop\\arthas\\watch.jar", methodPath);
+        virtualMachine.detach();
+    }
+
+
+    public static void trace(String methodPath ,String pid)
+            throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+        VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+        virtualMachine.loadAgent("C:\\Users\\64669\\Desktop\\arthas\\trace.jar", methodPath);
+        virtualMachine.detach();
+    }
+
+    public static void redefine(String classPath, String pid)
+            throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+        VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+        virtualMachine.loadAgent("C:\\Users\\64669\\Desktop\\arthas\\redefine.jar", classPath);
+        virtualMachine.detach();
+    }
+}
+
+```
+
