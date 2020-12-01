@@ -5,7 +5,6 @@ i_arthas 是模仿阿里开源的阿尔萨斯写的小工具。整体技术上�
 
 ### 实现思路
 
-https://callmejiagu.github.io/
 [阿尔萨斯 原理探究 仿写arthas-TimeTunnel 流量采集](https://callmejiagu.github.io/2019/07/28/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-TimeTunnel/)
 
 [阿尔萨斯 原理探究 仿写arthas-watch](https://callmejiagu.github.io/2019/07/19/%E9%98%BF%E5%B0%94%E8%90%A8%E6%96%AF-%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6-%E4%BB%BF%E5%86%99arthas-watch/)
